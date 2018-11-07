@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	</style>
+	<script src="js/jquery.js"></script>
+	<link  href="css/cropper.min.css" rel="stylesheet">
+	<script src="js/cropper.min.js"></script>
+	<script src="js/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/fabric.js" type="text/javascript" charset="utf-8"></script>
+	<link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
+	<link href="css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+	<style>
+	button {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+	}
+	#myfile {
+		position: absolute;
+		padding:5px 10px;
+		background:#4CAF50;
+		border:1px solid #00ad2d;
+		position:relative;
+		color:#fff;
+		border-radius:2px;
+		text-align:center;
+		float:left;
+		cursor:pointer
+	}
+	.hide_file {
+		position: absolute;
+		z-index: 1000;
+		opacity: 0;
+		cursor: pointer;
+		right: 0;
+		top: 0;
+		height: 100%;
+		font-size: 24px;
+		width: 100%;
+
+	}
+
+	.image_container {
+		padding: 10px;
+		width: 300px;
+		float: left;
+		position: relative;
+	}
+	#wrapper {
+		margin: 20px auto;
+		width: 1230px;
+		position: relative;
+	}
+	#result {
+		display: block;
+		width: 840px;
+		height: 500px;
+		padding: 10px;
+		border: 1px solid black;
+		float: left;
+	}
+	.item {
+		max-width: 100px;
+		float: left;
+		border-width: 1px;
+		padding: 5px;
+	}
+	#img_editor {
+		margin-top: 10px;
+		padding: 0px;
+		float: left;
+		display: block;
+		width: 100%;
+		height: 360px;
+	}
+	#img_editor img {
+		max-height: 100%;
+		max-width: 100%;
+		border: 1px solid green;
+		display: block;
+		margin: 0 auto;
+	}
+	#buttons {
+		float: left;
+		width: 100%;
+	}
+	.canvas-container2 {
+		float: left;
+	}
+	</style>
+</head>
+<body>
+	<div id='wrapper'>
+		<div class="image_container">
+			<div id="myfile">
+				Choose file<input type="file" name="image" id="image" class="hide_file" onchange="readURL(this);"/>
+			</div>
+			<div id='img_editor'>
+				<img id="blah" />
+
+
+			</div>
+			<div id='buttons'>
+				<button id="search_button">Search</button>
+			</div>
+		</div>
+		<div id='result'></div>
+	</div>
+
+
+	<script type="text/javascript" defer>
+	$("#myTags").tagit({placeholderText: 'Image tags'});
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$('#blah').cropper('destroy')
+				$('#blah').attr('src', e.target.result)
+				$('#blah').cropper()
+			};
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+	initListener()
+	function initListener(){
+		var cropper = $('#blah')
+		document.getElementById('search_button').addEventListener('click', function(){
+			$('#blah').cropper('getCroppedCanvas').toBlob(function (blob) {
+				var form = new FormData()
+				form.append('img', blob)
+				
+
+				// Use `jQuery.ajax` method
+				$.ajax('/search', {
+					method: "POST",
+					data: form,
+					processData: false,
+					contentType: false,
+					success: function (msg) {
+						$('#result').children().remove();
+
+						if (msg['hits']) {
+							var hits = msg['hits'];
+							for (var i = 0; i < hits.length; i++) {
+								(function(i) {
+									var img = $('<img class="item">'); //Equivalent: $(document.createElement('img'))
+									img.attr('src', hits[i]['img_src']);
+									//var boxes = hits[i]['coords']
+									img.appendTo('#result');
+								}(i));
+
+							}
+						}
+					},
+					error: function () {
+						console.log('Upload error');
+					}
+				});
+			});
+		})
+	}
+	</script>
+</body>
+</html>

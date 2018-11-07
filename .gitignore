@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+images/
+test_images/
+data/
+query/
+object_detection/
 
 # C extensions
 *.so
