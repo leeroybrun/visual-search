@@ -112,7 +112,7 @@ def start():
                 print(ex)
                 pass
 
-        with open(os.path.join('features.tsv'), 'w') as output:
+        with open(os.path.join('data', 'features.tsv'), 'w') as output:
             w = csv.DictWriter(output, fieldnames=['filename', 'features'], delimiter='\t', lineterminator='\n')
             w.writeheader()
             w.writerows(features)

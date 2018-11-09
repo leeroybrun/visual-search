@@ -126,7 +126,8 @@ def load_search_engine():
     global engine
 
     # read in the data file
-    data = pandas.read_csv('features.tsv', sep='\t')
+    data = pandas.read_csv(os.path.join('data', 'features.tsv'), sep='\t')
+    data_objects = pandas.read_csv(os.path.join('data', 'object_features.tsv'), sep='\t')
 
     # Create a random binary hash with 10 bits
     rbp = RandomBinaryProjections('rbp', 10)
@@ -137,6 +138,9 @@ def load_search_engine():
     # indexing
     for i in range(0, len(data)):
         engine.store_vector(np.asarray(data['features'][i].split(',')).astype('float64'), data['filename'][i].replace('images\\\\', '').replace('images\\', '').replace('images/', ''))
+    
+    for i in range(0, len(data_objects)):
+        engine.store_vector(np.asarray(data_objects['features'][i].split(',')).astype('float64'), data_objects['filename'][i].replace('images\\\\', '').replace('images\\', '').replace('images/', ''))
     
     return engine
 
