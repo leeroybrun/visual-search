@@ -9,7 +9,7 @@ It's used in a lot of apps : Zalando, Farfetch, Pinterest, Snapchat, etc
 
 ## How
 
-Compute features of all images inside Odoo
+Compute features of all products images.
 
 Image can be in multiple products, so use MD5/SHA sum to make it unique (as an ID).
 Then for each sum, link the associated products.
