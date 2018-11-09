@@ -1,9 +1,9 @@
-# Visual Search at Batiplus
+# Visual Search
 
 ## Goal
 
 Visual search is becoming more and more useful in today's world.
-People qant to take pictures of furniture they like, and be reocmmended similar ones.
+People qant to take pictures of products they like, and be recommended similar ones.
 
 It's used in a lot of apps : Zalando, Farfetch, Pinterest, Snapchat, etc
 
